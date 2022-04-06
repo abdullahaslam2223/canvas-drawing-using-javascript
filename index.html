@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>HTML5 Canvas</title>
+</head>
+
+<body>
+  <div class="flex">
+    <label for="color">Select Color from here...</label>
+    <input type="color" name="color" id="color">
+    <label for="width">Change width from here</label>
+    <input type="range" name="range" min="10" max="80" id="width">
+  </div>
+  <canvas id="draw" width="800" height="800"></canvas>
+
+  <script>
+
+    const canvas = document.getElementById("draw");
+    const ctx = canvas.getContext('2d');
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    ctx.strokeStyle = 'black';
+    ctx.lineJoin = 'round';
+    ctx.lineCap = 'round';
+    ctx.lineWidth = 50;
+
+    let isDrawing = false;
+    let lastX = 0;
+    let lastY = 0;
+
+    function draw(e) {
+      if (!isDrawing) return;
+      console.log(e);
+      ctx.beginPath();
+      ctx.moveTo(lastX, lastY);
+      ctx.lineTo(e.offsetX, e.offsetY);
+      ctx.stroke();
+      [lastX, lastY] = [e.offsetX, e.offsetY];
+    }
+
+
+    canvas.addEventListener('mousemove', draw);
+    canvas.addEventListener('mousedown', (e) => {
+      isDrawing = true;
+      [lastX, lastY] = [e.offsetX, e.offsetY];
+    });
+    canvas.addEventListener('mouseup', () => isDrawing = false);
+    canvas.addEventListener('mouseout', () => isDrawing = false);
+
+    function changeColor() {
+      ctx.strokeStyle = this.value;
+    }
+
+    const color = document.getElementById("color");
+    color.addEventListener('change', changeColor);
+
+
+    function changeWidth() {
+      ctx.lineWidth = this.value;
+    }
+
+    const width = document.getElementById("width");
+    width.addEventListener('change', changeWidth);
+
+  </script>
+
+  <style>
+    html,
+    body {
+      margin: 0;
+    }
+
+    .flex {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-bottom: 10px solid black;
+    }
+
+    #color {
+      margin-top: 20px;
+      width: 30%;
+      height: 80px;
+      margin-bottom: 10px;
+      margin-right: 10px;
+    }
+  </style>
+
+</body>
+
+</html>
